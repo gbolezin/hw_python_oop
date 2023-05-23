@@ -1,9 +1,8 @@
 # импорт библиотеки dataclasses
-from dataclasses import dataclass
 import dataclasses
 
 
-@dataclass
+@dataclasses.dataclass
 class InfoMessage:
     """Информационное сообщение о тренировке."""
     # формат сообщения о тренировке
@@ -41,7 +40,6 @@ class Training:
             duration: float,
             weight: float,
     ) -> None:
-
         self.action: int = action
         self.duration: float = duration
         self.weight: float = weight
@@ -57,8 +55,8 @@ class Training:
     def get_spent_calories(self) -> float:
         """Получить количество затраченных калорий."""
         raise NotImplementedError(
-            f'Функция get_spent_calories() '
-            f'должна быть реализована '
+            'Функция get_spent_calories() '
+            'должна быть реализована '
             f'в дочерних классах {type(self).__name__}'
         )
 
@@ -184,20 +182,19 @@ class Swimming(Training):
 
 def read_package(workout_type: str, data: list[float]) -> Training:
     """Прочитать данные полученные от датчиков."""
-    training_types: dict[str, Training] = {
+    training_types: dict[str, type[Training]] = {
         'SWM': Swimming,
         'RUN': Running,
         'WLK': SportsWalking
     }
     if workout_type not in training_types:
         # получить доступные типы тренировок
-        available_training_types = ', '.join(training_types.keys())
+        available_training_types = ', '.join(training_types)
         raise ValueError(
             f'''Ошибка данных - неизвестный тип тренировки "{workout_type}".
             Возможные следующие типы тренировок: {available_training_types}'''
         )
-    else:
-        return training_types[workout_type](*data)
+    return training_types[workout_type](*data)
 
 
 def main(training: Training) -> None:
